@@ -6,7 +6,7 @@ import os
 
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN", "THIS IS WHERE YOUR TELEGRAM TOKEN GOES")
 api_key = os.environ.get("OPENAI_API_KEY", "THIS IS WHERE YOUR OPENAI TOKEN GOES")
-AUTHORIZED_USERS = ['YOUR TELEGRAM ID', 'YOUR MOMS TELEGRAM ID']
+AUTHORIZED_USERS = [os.environ.get('YOUR_TELEGRAM_ID')]
 
 async def transcribe_audio(file_path, api_key=api_key):
     url = "https://api.openai.com/v1/audio/transcriptions"
@@ -55,14 +55,17 @@ async def handle_audio(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     text = await transcribe_audio(file_path)
     context.user_data['recent_text'] = text
 
-    await update.message.reply_text(f'Transcribed Text: {text}')
+    await update.message.reply_text(f'Transcribed Text: \n\n{text}')
+    if os.path.exists(file_path):
+        os.remove(file_path)
+    
 
 async def summarize_text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Summarize the most recent transcribed text."""
     recent_text = context.user_data.get('recent_text')
     if recent_text and recent_text.strip() != "":
         summary = await generate_summary(recent_text)
-        await update.message.reply_text(f'Summary: {summary}')
+        await update.message.reply_text(f'Summary: \n\n{summary}')
     else:
         await update.message.reply_text("No text available to summarize. Please send an audio file first.")
 
