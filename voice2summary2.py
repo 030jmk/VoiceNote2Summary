@@ -4,8 +4,8 @@ import aiohttp
 import requests
 import os
 
-TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN", "THIS IS WHERE YOUR TELEGRAM TOKEN GOES")
-api_key = os.environ.get("OPENAI_API_KEY", "THIS IS WHERE YOUR OPENAI TOKEN GOES")
+TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
+api_key = os.environ.get("OPENAI_API_KEY")
 AUTHORIZED_USERS = [os.environ.get('YOUR_TELEGRAM_ID')]
 
 async def transcribe_audio(file_path, api_key=api_key):
